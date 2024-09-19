@@ -1,6 +1,6 @@
-###imports
+from "diodelib/parts/max30208clb/max30208clb.ato" import Max30208clb
 
 module Phettl_dev:
     signal gnd
-    
-    ###body
+
+    temp = new Max30208clb
