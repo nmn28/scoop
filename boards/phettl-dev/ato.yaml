@@ -7,7 +7,11 @@ dependencies:
   version_spec: '@09ad6baeaab93d53b9b6c90069ac750f4161d76f'
   link_broken: false
   path: .ato/modules/generics
-- name: max30208clb
+- name: tmp116aidrvr
   link_broken: false
-  source: diodelib/parts/max30208clb
-  path: .ato/modules/max30208clb
+  source: diodelib/parts/tmp116aidrvr
+  path: .ato/modules/tmp116aidrvr
+- name: max30102efd+t
+  link_broken: false
+  source: diodelib/parts/max30102efd+t
+  path: .ato/modules/max30102efd+t

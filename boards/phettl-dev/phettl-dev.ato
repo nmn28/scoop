@@ -1,6 +1,8 @@
-from "diodelib/parts/max30208clb/max30208clb.ato" import Max30208clb
+from "diodelib/parts/tmp116aidrvr/tmp116aidrvr.ato" import Tmp116aidrvr
+from "diodelib/parts/max30102efd+t/max30102efd+t.ato" import Max30102efd_t
 
 module Phettl_dev:
     signal gnd
 
-    temp = new Max30208clb
+    temp = new Tmp116aidrvr
+    hr = new Max30102efd_t
