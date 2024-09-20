@@ -15,3 +15,7 @@ dependencies:
   link_broken: false
   source: diodelib/parts/max30102efd+t
   path: .ato/modules/max30102efd+t
+- name: xiao
+  link_broken: false
+  source: diodelib/modules/xiao
+  path: .ato/modules/xiao
