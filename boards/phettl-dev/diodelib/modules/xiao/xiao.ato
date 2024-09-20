@@ -1,0 +1,50 @@
+from "generics/interfaces.ato" import Power
+
+component _Seeed_Studio_XIAO_nRF52840_Sense:
+    # Source: [Footprint file]
+    footprint = "XIAO-nRF52840-Sense-14P-2.54-21X17.8MM"
+    mpn = "102010469"
+    # Source: [Symbol file]
+    signal P002_A0_D0 ~ pin 1
+    signal P003_A1_D1 ~ pin 2
+    signal P028_A2_D2 ~ pin 3
+    signal P029_A3_D3 ~ pin 4
+    signal P004_A4_D4_SDA ~ pin 5
+    signal P005_A5_D5_SCL ~ pin 6
+    signal P111_D6_TX ~ pin 7
+    signal P112_D7_RX ~ pin 8
+    signal P113_D8_SCK ~ pin 9
+    signal P114_D9_MISO ~ pin 10
+    signal P115_D10_MOSI ~ pin 11
+    signal _3V3 ~ pin 12
+    signal GND ~ pin 13
+    signal _5V ~ pin 14
+    signal PA31_SWDIO ~ pin 15
+    signal PA30_SWCLK ~ pin 16
+    signal RESET ~ pin 17
+    signal GND ~ pin 18
+    signal P009_NFC1 ~ pin 19
+    signal P010_NFC2 ~ pin 20
+    signal BATMINUS ~ pin 21
+    signal BATPLUS ~ pin 22
+
+
+module Xiao_nRF52840_Sense:
+
+    # Interfaces 
+    power_bat = new Power
+    power_5v0 = new Power
+    power_3v3 = new Power
+
+    # Components
+    ic = new _Seeed_Studio_XIAO_nRF52840_Sense
+
+    # Connections
+    power_bat.vcc = ic.BATPLUS
+    power_bat.gnd = ic.BATMINUS
+
+    power_5v0.vcc = ic._5V
+    power_5v0.gnd = ic.GND
+
+    power_3v3.vcc = ic._3V3
+    power_3v3.gnd = ic.GND

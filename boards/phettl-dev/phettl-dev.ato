@@ -1,6 +1,19 @@
-###imports
+from "diodelib/parts/tmp116aidrvr/tmp116aidrvr.ato" import Tmp116aidrvr
+from "diodelib/parts/max30102efd+t/max30102efd+t.ato" import Max30102efd_t
+from "diodelib/modules/xiao/xiao.ato" import Xiao_nRF52840_Sense
+
+component Mounting_Hole:
+    footprint = "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
+    do_not_populate = True
+
+    signal GND ~ pin 1
 
 module Phettl_dev:
-    signal gnd
     
-    ###body
+
+    temp = new Tmp116aidrvr
+    hr = new Max30102efd_t
+    xiao = new Xiao_nRF52840_Sense
+
+    m1 = new Mounting_Hole
+    m2 = new Mounting_Hole
