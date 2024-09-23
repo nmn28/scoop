@@ -1,0 +1,64 @@
+from "generics/interfaces.ato" import JTAG, SWD
+
+module Headers:
+    signal gnd
+
+component PinHeader_1x01_2mm54_Vertical:
+    footprint = "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical"
+    do_not_populate = True
+
+    signal P1 ~ pin 1
+
+component PinHeader_1x02_2mm54_Vertical:
+    footprint = "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+    do_not_populate = True
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+
+component PinHeader_1x03_2mm54_Vertical:
+    footprint = "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+    do_not_populate = True
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+    signal P3 ~ pin 3
+
+component PinHeader_1x04_2mm54_Vertical:
+    footprint = "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+    do_not_populate = True
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+    signal P3 ~ pin 3
+    signal P4 ~ pin 4
+
+component PinHeader_SWD:
+    footprint = "CONN_BD125-10-x-0305-0580-L-x_GCT"
+    mpn = "BD125-10-A-0305-0580-L-B"
+
+    signal VCC ~ pin 1
+    signal SWDIO ~ pin 2
+    signal GND ~ pin 3
+    signal SWCLK ~ pin 4
+    signal GND ~ pin 5
+    signal SWO ~ pin 6
+    signal KEY ~ pin 7
+    signal NC ~ pin 8
+    signal GNDDetect ~ pin 9
+    signal nRESET ~ pin 10
+
+    swd = new SWD
+    swd.swdio ~ SWDIO
+    swd.swclk ~ SWCLK
+    swd.swo ~ SWO
+    swd.gnd ~ GND
+
+    jtag = new JTAG
+    jtag.tck ~ SWCLK
+    jtag.tms ~ SWDIO
+    jtag.tdi ~ NC
+    jtag.tdo ~ SWO
+    jtag.reset ~ nRESET
+    jtag.vcc ~ VCC
+    jtag.gnd ~ GND

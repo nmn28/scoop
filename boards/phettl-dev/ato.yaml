@@ -23,3 +23,11 @@ dependencies:
   link_broken: false
   source: diodelib/parts/tps7a0518pdbvr
   path: .ato/modules/tps7a0518pdbvr
+- name: hm-nfc-class6
+  link_broken: false
+  source: diodelib/pcb/hm-nfc-class6
+  path: .ato/modules/hm-nfc-class6
+- name: headers
+  link_broken: false
+  source: diodelib/connectors/headers
+  path: .ato/modules/headers

@@ -5,6 +5,8 @@ from "diodelib/parts/tmp116aidrvr/tmp116aidrvr.ato" import Tmp116aidrvr
 from "diodelib/parts/max30102efd+t/max30102efd+t.ato" import Max30102efd_t
 from "diodelib/modules/xiao/xiao.ato" import Xiao_nRF52840_Sense
 from "diodelib/parts/tps7a0518pdbvr/tps7a0518pdbvr.ato" import Tps7a0518pdbvr
+from "diodelib/pcb/hm-nfc-class6/hm-nfc-class6.ato" import NfcClass6
+from "diodelib/connectors/headers/pins.ato" import PinHeader_1x02_2mm54_Vertical
 
 component Mounting_Hole:
     footprint = "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
@@ -26,9 +28,12 @@ module Phettl_dev:
     ldo = new Tps7a0518pdbvr
     r_scl = new Resistor
     r_sda = new Resistor
+    batt = new PinHeader_1x02_2mm54_Vertical
 
     # Connections
     signal gnd ~ power_bat.gnd
+    power_bat.vcc ~ batt.P1
+    power_bat.gnd ~ batt.P2
     
     # Power connections
     power_bat ~ xiao.power_bat
