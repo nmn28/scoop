@@ -1,19 +1,63 @@
+from "generics/interfaces.ato" import Power
+from "generics/resistors.ato" import Resistor
+
 from "diodelib/parts/tmp116aidrvr/tmp116aidrvr.ato" import Tmp116aidrvr
 from "diodelib/parts/max30102efd+t/max30102efd+t.ato" import Max30102efd_t
 from "diodelib/modules/xiao/xiao.ato" import Xiao_nRF52840_Sense
+from "diodelib/parts/tps7a0518pdbvr/tps7a0518pdbvr.ato" import Tps7a0518pdbvr
 
 component Mounting_Hole:
     footprint = "MountingHole:MountingHole_2.2mm_M2_DIN965_Pad"
     do_not_populate = True
-
-    signal GND ~ pin 1
+    signal gnd ~ pin 1
 
 module Phettl_dev:
-    
+    # Interfaces
+    power_bat = new Power
+    power_3v3 = new Power
+    power_1v8 = new Power
 
+    # Components
+    m1 = new Mounting_Hole
+    m2 = new Mounting_Hole
     temp = new Tmp116aidrvr
     hr = new Max30102efd_t
     xiao = new Xiao_nRF52840_Sense
+    ldo = new Tps7a0518pdbvr
+    r_scl = new Resistor
+    r_sda = new Resistor
 
-    m1 = new Mounting_Hole
-    m2 = new Mounting_Hole
+    # Connections
+    signal gnd ~ power_bat.gnd
+    
+    # Power connections
+    power_bat ~ xiao.power_bat
+    power_3v3 ~ xiao.power_3v3
+
+    # LDO connections
+    power_3v3 ~ ldo.power_5v0_in
+    power_1v8 ~ ldo.power_1v8_out
+
+    # Power connections
+    temp.power ~ power_3v3
+    hr.power_led ~ power_3v3
+    hr.power_vdd ~ power_1v8
+
+    # I2C connections
+    xiao.i2c ~ hr.i2c
+    xiao.i2c ~ temp.i2c
+
+    # Mounting holes
+    m1.gnd ~ gnd
+    m2.gnd ~ gnd
+
+    # I2C pull-up resistors
+    r_scl.value = 4.7kohm  +/- 10%
+    r_scl.package = "0402"
+    r_scl.p1 ~ xiao.i2c.scl
+    r_scl.p2 ~ power_3v3.vcc
+
+    r_sda.value = 4.7kohm  +/- 10%
+    r_sda.package = "0402"
+    r_sda.p1 ~ xiao.i2c.sda
+    r_sda.p2 ~ power_3v3.vcc

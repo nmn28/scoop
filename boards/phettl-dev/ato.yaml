@@ -19,3 +19,7 @@ dependencies:
   link_broken: false
   source: diodelib/modules/xiao
   path: .ato/modules/xiao
+- name: tps7a0518pdbvr
+  link_broken: false
+  source: diodelib/parts/tps7a0518pdbvr
+  path: .ato/modules/tps7a0518pdbvr
