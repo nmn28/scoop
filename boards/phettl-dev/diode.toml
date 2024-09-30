@@ -1,0 +1,12 @@
+[module]
+name = "Phettl Dev"
+
+[registries]
+diodelib = { url = "https://github.com/diodeinc/diodelib.git", rev = "432717c" }
+
+[dependencies]
+tmp116aidrvr = { registry = "diodelib", path = "parts/tmp116aidrvr", vendored = true }
+max30102efd_t = { registry = "diodelib", path = "parts/max30102efd+t", vendored = true }
+xiao = { registry = "diodelib", path = "modules/xiao", vendored = true }
+tps7a0518pdbvr = { registry = "diodelib", path = "parts/tps7a0518pdbvr", vendored = true }
+headers = { registry = "diodelib", path = "connectors/headers", vendored = true }
