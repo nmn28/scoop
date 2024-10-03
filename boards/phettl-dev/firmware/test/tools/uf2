@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+
+uf2(){
+    local ELF=${@: -1}           # Last argument
+    local ARGS=${@:1:$#-1}       # All other args
+    local SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+    local OUTPUT_DIR=$(dirname $ELF)
+
+    rust-objcopy $ELF -O binary $OUTPUT_DIR/app.bin && $SCRIPT_DIR/uf2conv.py $ARGS $OUTPUT_DIR/app.bin
+}
+
+uf2 $@
