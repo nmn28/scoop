@@ -1,0 +1,36 @@
+[package]
+name = "nrf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cortex-m = { version = "0.7.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "0.7.3", features = ["device"] }
+embedded-hal = "0.2.7"
+panic-halt = "0.2.0"
+heapless = "0.8.0"
+nb = "1.0.0"
+
+[dependencies.nrf52840-hal]
+version = "0.16.0"
+features = ["rt"]
+
+[[bin]]
+name = "max30102"
+path = "src/bin/max30102.rs"
+test = false
+bench = false
+
+[profile.release]
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"
+
+[profile.dev]
+debug = true
+opt-level = "s"
+
+# Build for Cortex-M4F with FPU
+[build]
+target = "thumbv7em-none-eabihf"

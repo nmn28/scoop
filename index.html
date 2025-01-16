@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Rate Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .readings {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .reading-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+            min-width: 200px;
+        }
+        .reading-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .reading-value {
+            font-size: 32px;
+            color: #333;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .timestamp {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #e7f3fe;
+            border-radius: 5px;
+            color: #004085;
+        }
+        #chart {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+        #debug {
+            font-family: monospace;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Heart Rate Monitor</h1>
+        <div id="status" class="status disconnected">Disconnected</div>
+        <div class="instructions">
+            <p><strong>Instructions:</strong></p>
+            <p>1. Place your finger gently but firmly on the sensor</p>
+            <p>2. Hold still for 5-10 seconds to allow readings to stabilize</p>
+            <p>3. Maintain consistent pressure - not too hard, not too soft</p>
+        </div>
+        <div class="timestamp" id="timestamp">--</div>
+        <div class="readings">
+            <div class="reading-box">
+                <div class="reading-label">RED</div>
+                <div class="reading-value" id="red-value">--</div>
+            </div>
+            <div class="reading-box">
+                <div class="reading-label">IR</div>
+                <div class="reading-value" id="ir-value">--</div>
+            </div>
+        </div>
+        <div id="chart"></div>
+        <div id="debug"></div>
+    </div>
+
+    <script>
+        let ws = new WebSocket('ws://localhost:8765');
+        let redReadings = [];
+        let irReadings = [];
+        let timestamps = [];
+        let debugDiv = document.getElementById('debug');
+
+        // Initialize the chart
+        let trace1 = {
+            y: redReadings,
+            x: timestamps,
+            name: 'RED',
+            mode: 'lines',
+            line: {color: '#ff4444'}
+        };
+
+        let trace2 = {
+            y: irReadings,
+            x: timestamps,
+            name: 'IR',
+            mode: 'lines',
+            line: {color: '#4444ff'}
+        };
+
+        let layout = {
+            title: 'Sensor Readings Over Time',
+            xaxis: {title: 'Time'},
+            yaxis: {title: 'Value'}
+        };
+
+        Plotly.newPlot('chart', [trace1, trace2], layout);
+
+        ws.onmessage = function(event) {
+            let data = JSON.parse(event.data);
+            
+            // Update status
+            let statusDiv = document.getElementById('status');
+            statusDiv.textContent = data.status;
+            statusDiv.className = 'status ' + (data.status === 'Connected' ? 'connected' : 'disconnected');
+
+            // Update current readings
+            document.getElementById('red-value').textContent = data.red;
+            document.getElementById('ir-value').textContent = data.ir;
+            document.getElementById('timestamp').textContent = 
+                new Date(data.timestamp * 1000).toLocaleTimeString();
+
+            // Update debug display
+            let newLine = document.createElement('div');
+            newLine.textContent = `${new Date(data.timestamp * 1000).toLocaleTimeString()}: RED=${data.red} IR=${data.ir}`;
+            debugDiv.appendChild(newLine);
+            if (debugDiv.childNodes.length > 50) {
+                debugDiv.removeChild(debugDiv.firstChild);
+            }
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+
+            // Update chart
+            redReadings.push(data.red);
+            irReadings.push(data.ir);
+            timestamps.push(new Date(data.timestamp * 1000));
+
+            // Keep last 30 readings
+            if (redReadings.length > 30) {
+                redReadings.shift();
+                irReadings.shift();
+                timestamps.shift();
+            }
+
+            Plotly.update('chart', {
+                y: [redReadings, irReadings],
+                x: [timestamps, timestamps]
+            });
+        };
+
+        ws.onclose = function() {
+            document.getElementById('status').textContent = 'Disconnected';
+            document.getElementById('status').className = 'status disconnected';
+        };
+
+        // Attempt to reconnect if connection is lost
+        ws.onclose = function() {
+            document.getElementById('status').textContent = 'Disconnected - Attempting to reconnect...';
+            document.getElementById('status').className = 'status disconnected';
+            setTimeout(function() {
+                ws = new WebSocket('ws://localhost:8765');
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
+    
