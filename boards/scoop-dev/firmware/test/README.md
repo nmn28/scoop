@@ -29,6 +29,31 @@ To use the heart rate monitor:
 3. Place your finger on the sensor
 4. View real-time readings in the web interface
 
+## Getting Started
+
+### Prerequisites
+- Rust toolchain with `thumbv7em-none-eabihf` target
+- Python 3.x for the visualization tool
+- Seeed Studio XIAO nRF52840 board
+- MAX30102 sensor connected to I2C pins (SCL: P0.12, SDA: P0.11)
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/nmn28/scoop.git
+   cd scoop/boards/scoop-dev/firmware/test
+   ```
+
+2. Install Rust dependencies:
+   ```bash
+   rustup target add thumbv7em-none-eabihf
+   ```
+
+3. Install Python dependencies:
+   ```bash
+   pip install pyserial dash plotly
+   ```
+
 ## UF2 bootloader
 
 The Seeed Studio XIAO nRF52840 comes standard with UF2 bootloader similar to what many adafruit boards provide.
@@ -77,6 +102,25 @@ To use the visualization tool:
 3. Open `http://localhost:8000` in your browser
 4. Follow the on-screen instructions
 
+## Troubleshooting
+
+Common issues and solutions:
+
+1. No serial port detected:
+   - Make sure the board is properly connected
+   - Check if the correct firmware is flashed
+   - Try pressing the reset button once
+
+2. Poor sensor readings:
+   - Ensure your finger is placed directly over the sensor
+   - Keep your finger still during measurements
+   - Check the debug output for signal quality indicators
+
+3. Compilation errors:
+   - Make sure all dependencies are installed
+   - Check that you're using the correct Rust target
+   - Verify the toolchain is up to date
+
 ## Cargo Embed
 
 In addition to the bootloader we can also flash the probe with the `cargo embed` command (after installing [`cargo embed`](https://github.com/probe-rs/cargo-embed)). This will also provide `rtt` logging and `gdb` debugging capabilities.
@@ -112,3 +156,11 @@ As previously mentioned, we need to know where our binary lives in memory to mak
 `--base` is set to `0x27000` since that's where we told out linker the binary would be. If we changed it in the linker we would need to change it here too.
 
 `--family` is the flag that tags the UF2 image as safe to flash on our hardware, for the nRF5284 this value is `0xADA52840`.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
